@@ -1,0 +1,63 @@
+{
+  "name": "react-native-pdf-kit",
+  "version": "0.1.0",
+  "description": "A React Native module for PDF functionality with native iOS and Android support",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "react-native": "src/index.tsx",
+  "source": "src/index.tsx",
+  "files": [
+    "src",
+    "dist",
+    "android",
+    "ios",
+    "react-native-pdf-kit.podspec",
+    "!android/build",
+    "!ios/build",
+    "!**/__tests__",
+    "!**/__fixtures__",
+    "!**/__mocks__"
+  ],
+  "scripts": {
+    "build": "bunchee",
+    "dev": "bunchee --watch",
+    "clean": "rm -rf dist",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "typecheck": "tsc --noEmit",
+    "prepare": "bun run build",
+    "example": "bun --cwd example run start"
+  },
+  "keywords": ["react-native", "ios", "android", "pdf"],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GeorgeBelben/react-native-pdf-kit.git"
+  },
+  "author": "George Belben <hello@georgebelben.dev>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/GeorgeBelben/react-native-pdf-kit/issues"
+  },
+  "homepage": "https://github.com/GeorgeBelben/react-native-pdf-kit#readme",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@types/react": "^18.3.12",
+    "@types/react-native": "^0.73.0",
+    "bunchee": "^5.5.1",
+    "react": "^18.3.1",
+    "react-native": "^0.76.5",
+    "typescript": "^5.6.3"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*"
+  },
+  "engines": {
+    "node": ">= 18.0.0"
+  }
+}

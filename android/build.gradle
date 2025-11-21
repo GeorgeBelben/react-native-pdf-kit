@@ -1,0 +1,92 @@
+buildscript {
+  ext {
+    buildToolsVersion = "34.0.0"
+    minSdkVersion = 23
+    compileSdkVersion = 34
+    targetSdkVersion = 34
+    ndkVersion = "26.1.10909125"
+    kotlinVersion = "1.9.22"
+  }
+  
+  repositories {
+    google()
+    mavenCentral()
+  }
+  
+  dependencies {
+    classpath("com.android.tools.build:gradle:8.1.1")
+    classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
+  }
+}
+
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+def safeExtGet(prop, fallback = null) {
+    if (rootProject.ext.has(prop)) {
+        return rootProject.ext[prop]
+    }
+    if (project.properties[prop]) {
+        return project.properties[prop]
+    }
+    return fallback
+}
+
+def reactNative = rootProject.file("../node_modules/react-native")
+def reactProperties = new Properties()
+file("$reactNative/ReactAndroid/gradle.properties").withInputStream { reactProperties.load(it) }
+
+def REACT_NATIVE_VERSION = reactProperties.getProperty("VERSION_NAME").split("\\.")[1].toInteger()
+
+android {
+  namespace "com.reactnativepdfkit"
+  compileSdkVersion rootProject.ext.compileSdkVersion
+  
+  defaultConfig {
+    minSdkVersion rootProject.ext.minSdkVersion
+    targetSdkVersion rootProject.ext.targetSdkVersion
+    buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
+  }
+  
+  buildFeatures {
+    buildConfig true
+  }
+  
+  buildTypes {
+    release {
+      minifyEnabled false
+    }
+  }
+  
+  lintOptions {
+    disable 'GradleCompatible'
+    abortOnError false
+  }
+  
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_17
+    targetCompatibility JavaVersion.VERSION_17
+  }
+  
+  kotlinOptions {
+    jvmTarget = '17'
+  }
+}
+
+repositories {
+  mavenCentral()
+  google()
+}
+
+dependencies {
+  implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+  implementation "com.facebook.react:react-android"
+  
+  def pdfViewerVersion = safeExtGet('pdfViewerVersion', '3.2.0-beta.1')
+  def pdfViewerRepo = safeExtGet('pdfViewerRepo', 'com.github.mhiew')
+  implementation "$pdfViewerRepo:android-pdf-viewer:$pdfViewerVersion"
+}
+
+def isNewArchitectureEnabled() {
+  return project.hasProperty("newArchEnabled") && project.newArchEnabled == "true"
+}
